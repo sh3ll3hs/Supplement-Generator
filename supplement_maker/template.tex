@@ -1,0 +1,315 @@
+% =====================================================================
+%  RESCUE AUTOMOTIVE — Estimate template (CCC ONE layout)
+%  Compile with XeLaTeX or LuaLaTeX:   latexmk -xelatex estimate.tex
+%
+%  Everything you normally change lives in the "FILL IN" block below
+%  and in the four content sections (options, line items, totals,
+%  supplier list). Page geometry, fonts and spacing were measured off
+%  the 2018 Nissan Sentra estimate so the output lines up with it.
+% =====================================================================
+\documentclass[letterpaper,10pt]{article}
+
+% ---------- Fonts: Tahoma if installed (what CCC prints with), else DejaVu Sans
+\usepackage{fontspec}
+\IfFontExistsTF{Tahoma}
+  {\setmainfont{Tahoma}[BoldFont={Tahoma Bold}]}
+  {\setmainfont{DejaVu Sans}[Scale=0.88]}
+\usepackage[letterpaper,left=21.6pt,right=50.4pt,top=86pt,bottom=72pt,
+            headheight=52pt,headsep=22pt,footskip=24pt]{geometry}
+\usepackage{array,longtable,fancyhdr,ragged2e,etoolbox}
+\usepackage[table]{xcolor}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\tabcolsep}{0pt}
+\renewcommand{\arraystretch}{1}
+\pagestyle{fancy}
+
+% ---------- Type sizes (pt / leading) measured from the CCC output
+\newcommand{\body}{\fontsize{8}{13.5}\selectfont}        % everything in tables
+\newcommand{\sect}{\fontsize{10}{13.3}\bfseries\selectfont} % section titles
+\newcommand{\shopfont}{\fontsize{12}{16}\bfseries\selectfont}
+\newcommand{\legal}{\fontsize{10}{13.3}\selectfont}      % disclosure pages
+
+% =====================================================================
+%  FILL IN  ---------------------------------------------------------
+% =====================================================================
+\newcommand{\ShopName}{RESCUE AUTOMOTIVE}
+\newcommand{\ShopAddress}{10531 E Colonial Dr, Orlando, FL 32817}
+\newcommand{\ShopStreet}{10531 E Colonial Dr}
+\newcommand{\ShopCity}{Orlando, FL 32817}
+\newcommand{\ShopPhone}{(407) 658-9040}
+\newcommand{\ShopFax}{}                 % leave empty to drop the FAX line
+
+\newcommand{\EstimateTitle}{Preliminary Estimate}   % or "Supplement of Record 1", etc.
+\newcommand{\WorkfileID}{00000000}
+\newcommand{\RONumber}{100001}          % number printed in the footer
+\newcommand{\PrintedDate}{11/4/2026 4:26:21 PM}
+
+\newcommand{\CustomerName}{SAMPLE, CUSTOMER}
+\newcommand{\JobNumber}{}
+\newcommand{\WrittenBy}{Estimator}
+
+\newcommand{\Insured}{SAMPLE, CUSTOMER}
+\newcommand{\PolicyNo}{}
+\newcommand{\ClaimNo}{SAMPLE-CLAIM-0001}
+\newcommand{\TypeOfLoss}{}
+\newcommand{\DateOfLoss}{}
+\newcommand{\DaysToRepair}{0}
+\newcommand{\PointOfImpact}{}
+
+\newcommand{\OwnerName}{SAMPLE, CUSTOMER}
+\newcommand{\InsuranceCompany}{SAMPLE INSURANCE COMPANY}
+
+\newcommand{\VehicleDesc}{2018 NISS Sentra SV w/Continuously Variable Transmission 4D SED 4-1.8L Gasoline Sequential MPI}
+\newcommand{\VIN}{SAMPLEVIN00000001}
+\newcommand{\License}{}
+\newcommand{\VehState}{}
+\newcommand{\InteriorColor}{}
+\newcommand{\ExteriorColor}{}
+\newcommand{\ProductionDate}{}
+\newcommand{\MileageIn}{}
+\newcommand{\MileageOut}{}
+\newcommand{\Condition}{}
+\newcommand{\VehicleOut}{}
+\newcommand{\JobNo}{}
+% =====================================================================
+
+% ---------- Helpers
+\newcommand{\hrulefull}[1]{\par\noindent\rule{\textwidth}{#1}\par}
+\newcommand{\ul}[1]{\underline{#1}}                     % CCC underlines edited values
+\newcommand{\lbl}[1]{#1}                                % plain field label
+\newcommand{\groupsep}{\arrayrulecolor{black!35}\cline{2-11}\arrayrulecolor{black}}
+
+% Running header for pages 2+ (page 1 draws its own, see below)
+\fancyhead{}\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}\renewcommand{\footrulewidth}{0pt}
+\fancyhead[C]{\raisebox{2pt}{%
+  \begin{minipage}{\textwidth}\body
+    \centerline{\sect\EstimateTitle}\vspace{-2pt}
+    \rule{\textwidth}{1.44pt}\\[0pt]
+    \makebox[\textwidth][s]{\hspace{3pt}\sect Customer: \CustomerName\hfill\sect Job Number: \JobNumber\hspace{5pt}}\\[-1pt]
+    {\hspace{1pt}\VehicleDesc}
+  \end{minipage}}}
+\fancyfoot[L]{\body\hspace{3pt}\PrintedDate}
+\fancyfoot[C]{\body\hspace{32pt}\RONumber}
+\fancyfoot[R]{\body Page \thepage}
+\fancypagestyle{firstpage}{\fancyhead{}\fancyfoot[L]{\body\hspace{3pt}\PrintedDate}\fancyfoot[C]{\body\hspace{32pt}\RONumber}\fancyfoot[R]{\body Page \thepage}}
+
+% ---------- Line-item table (longtable so it can run over pages)
+% columns: Line | symbol | Oper | Description | Part Number | Qty | Ext.Price | m/s | Labor | cat | Paint
+\setlength{\LTleft}{0pt}\setlength{\LTright}{0pt}
+\setlength{\LTpre}{0pt}\setlength{\LTpost}{0pt}
+\newenvironment{lineitems}{%
+  \body
+  \begin{longtable}{@{}w{r}{21pt}@{\hspace{14pt}}w{l}{62pt}w{l}{24pt}w{l}{160pt}w{c}{70pt}w{c}{24pt}w{r}{42pt}@{\hspace{6pt}}w{l}{8pt}w{r}{48pt}@{\hspace{4pt}}w{l}{10pt}w{r}{47pt}@{}}
+    \textbf{Line} & \multicolumn{2}{@{}l}{\hspace{60pt}\textbf{Oper}} & \multicolumn{1}{@{}l}{\hspace{39pt}\textbf{Description}} &
+    \textbf{Part Number} & \textbf{Qty} & \textbf{Extended} & & \textbf{Labor} & & \textbf{Paint}\\[-3pt]
+    & & & & & & \textbf{Price \$} & & & & \\[-1pt]
+    \hline
+    \endfirsthead
+    \textbf{Line} & \multicolumn{2}{@{}l}{\hspace{60pt}\textbf{Oper}} & \multicolumn{1}{@{}l}{\hspace{39pt}\textbf{Description}} &
+    \textbf{Part Number} & \textbf{Qty} & \textbf{Extended} & & \textbf{Labor} & & \textbf{Paint}\\[-3pt]
+    & & & & & & \textbf{Price \$} & & & & \\[-1pt]
+    \hline
+    \endhead
+}{\end{longtable}}
+% \Group{line}{SECTION TITLE}
+\newcommand{\Group}[2]{#1 & \multicolumn{10}{l@{}}{\textbf{#2}}\\}
+% \Item{line}{sym}{oper}{description}{part no}{qty}{ext price}{m/s}{labor}{labor cat}{paint}
+\newcommand{\Item}[9]{#1 & #2 & #3 & #4 & #5 & #6 & #7 & #8 & #9 & \ItemTail}
+\newcommand{\ItemTail}[2]{#1 & #2\\}
+% \Subtotals{parts $}{labor hrs}{paint hrs}
+\newcommand{\Subtotals}[3]{\hline \multicolumn{4}{r}{\textbf{SUBTOTALS}\hspace{34pt}} & & & \textbf{#1} & & \textbf{#2} & & \textbf{#3}\\ \hline}
+
+% ---------- Estimate totals (indented block, 421pt wide, starting at x=140)
+\newenvironment{totals}{%
+  \body\par\vspace{16pt}
+  \hspace*{118.8pt}\begin{minipage}{421.2pt}
+  {\sect ESTIMATE TOTALS}\par\vspace{5pt}
+  \begin{tabular}{@{\hspace{2.8pt}}w{l}{225pt}w{r}{44pt}w{c}{30pt}w{r}{63pt}w{r}{56pt}@{}}
+  \textbf{Category} & \textbf{Basis} & & \textbf{Rate} & \textbf{Cost \$}\\ \hline
+}{\end{tabular}\end{minipage}\par}
+% \TotalRow{Category}{basis}{rate}{cost}  — e.g. \TotalRow{Body Labor}{2.3 hrs}{\$ 63.00 /hr}{144.90}
+\newcommand{\TotalRow}[4]{#1 & #2 & \ifx\\#2\\\else @\fi & #3 & #4\\}
+\newcommand{\TotalLine}[2]{\hline #1 & & & & #2\\}                % Subtotal line (rule above)
+\newcommand{\TaxRow}[4]{\hline #1 & #2 & @ & #3 & #4\\}             % Sales Tax
+\newcommand{\GrandTotal}[2]{\hline \textbf{#1} & & & & \textbf{#2}\\ \hline}
+
+% ---------- Parts supplier list
+\newenvironment{suppliers}{%
+  \body\setcounter{supn}{0}
+  \begin{longtable}{@{}w{c}{43pt}@{\hspace{3pt}}w{l}{159pt}@{\hspace{3pt}}w{l}{254pt}w{r}{78pt}@{}}
+  \textbf{Line} & \textbf{Supplier} & \textbf{Description} & \textbf{Price}\\ \cline{2-3}\endhead
+}{\end{longtable}}
+% \Supplier{line}{name}{street}{city}{phone}{part #}{description}{quote}{expires}{price}
+\newcounter{supn}
+\newcommand{\Supplier}[9]{\ifnum\value{supn}>0 \cline{2-3}\noalign{\vskip 5pt}\fi\stepcounter{supn}%
+  #1 & \begin{tabular}[t]{@{}l@{}}#2\\#3\\#4\\#5\end{tabular} & \begin{tabular}[t]{@{}l@{}}#6\\#7\\#8\\#9\end{tabular} & \SupplierPrice}
+\newcommand{\SupplierPrice}[1]{#1\\[15pt]}
+
+\begin{document}\body
+\thispagestyle{firstpage}
+
+% =====================================================================
+%  PAGE 1 — shop header, customer, vehicle, options
+% =====================================================================
+\vspace*{-71pt}
+\begin{tabular}{@{}w{l}{150pt}w{c}{240pt}@{}w{l}{150pt}@{}}
+  &
+  \begin{tabular}[t]{@{}c@{}}
+    {\shopfont\ShopName}\\[2pt]
+    {\fontsize{10}{13.3}\selectfont\ShopAddress}\\
+    {\fontsize{10}{13.3}\selectfont Phone: \ShopPhone}\\
+    \ifdefempty{\ShopFax}{}{{\fontsize{10}{13.3}\selectfont FAX: \ShopFax}\\}
+  \end{tabular}
+  &
+  \begin{tabular}[t]{@{\hspace{22pt}}w{l}{60pt}w{r}{64pt}@{}}
+    \lbl{Workfile ID:} & \WorkfileID\\
+  \end{tabular}\\
+\end{tabular}
+
+\vspace{37pt}
+\centerline{\sect\EstimateTitle}\vspace{-2pt}
+\rule{\textwidth}{1.44pt}\\[-3pt]
+\makebox[\textwidth][s]{\hspace{3pt}\sect Customer: \CustomerName\hfill\sect Job Number: \JobNumber\hspace{5pt}}\\[0pt]
+\centerline{Written By: \WrittenBy}
+
+\vspace{12pt}
+\begin{tabular}{@{\hspace{2.8pt}}w{l}{64.7pt}w{l}{118.8pt}w{l}{37.5pt}w{l}{135.2pt}w{l}{64.8pt}w{l}{116pt}@{}}
+  Insured:         & \Insured & Policy \#: & \PolicyNo & Claim \#:       & \ClaimNo\\
+  Type of Loss:    & \TypeOfLoss &  Date of Loss: & \DateOfLoss & Days to Repair: & \DaysToRepair\\
+  Point of Impact: & \PointOfImpact & & & & \\
+\end{tabular}
+
+\vspace{12.5pt}
+\begin{tabular}{@{\hspace{2.8pt}}w{l}{178.2pt}w{l}{178.1pt}w{l}{181pt}@{}}
+  \textbf{Owner:} & \textbf{Inspection Location:} & \textbf{Insurance Company:}\\
+  \begin{tabular}[t]{@{}l@{}}\OwnerName\end{tabular} &
+  \begin{tabular}[t]{@{}l@{}}\ShopName\\ \ShopStreet\\ \ShopCity\\ Repair Facility\\ \ShopPhone\ Business\end{tabular} &
+  \begin{tabular}[t]{@{}l@{}}\InsuranceCompany\end{tabular}\\
+\end{tabular}
+
+\vspace{12.5pt}
+\hrulefull{0.72pt}
+\vspace{7pt}
+\centerline{\sect VEHICLE}
+\vspace{11pt}
+{\hspace{2.8pt}\VehicleDesc}\par
+\vspace{6pt}
+\begin{tabular}{@{\hspace{2.8pt}}w{l}{37.7pt}w{l}{107.9pt}w{l}{65pt}w{l}{107.8pt}w{l}{57pt}w{l}{56pt}w{l}{49pt}w{l}{56pt}@{}}
+  VIN:      & \VIN     & Interior Color:  & \InteriorColor & Mileage In:  & \MileageIn  & Vehicle Out: & \VehicleOut\\
+  License:  & \License & Exterior Color:  & \ExteriorColor & Mileage Out: & \MileageOut &              & \\
+  State:    & \VehState& Production Date: & \ProductionDate& Condition:   & \Condition  & Job \#:      & \JobNo\\
+\end{tabular}
+
+\vspace{18pt}
+\hrulefull{0.72pt}
+\vspace{3.5pt}
+% ---------- Vehicle options (4 columns; bold = category headings) ----------
+\begin{tabular}{@{\hspace{24.4pt}}w{l}{134.9pt}w{l}{134.9pt}w{l}{135.2pt}w{l}{110pt}@{}}
+  \textbf{TRANSMISSION}  & \textbf{CONVENIENCE}           & \textbf{RADIO}                 & Head/Curtain Air Bags\\
+  Automatic Transmission & Air Conditioning               & AM Radio                       & Hands Free Device\\
+  \textbf{POWER}         & Intermittent Wipers            & FM Radio                       & \textbf{SEATS}\\
+  Power Steering         & Tilt Wheel                     & Stereo                         & Cloth Seats\\
+  Power Brakes           & Cruise Control                 & Search/Seek                    & Bucket Seats\\
+  Power Windows          & Rear Defogger                  & CD Player                      & \textbf{WHEELS}\\
+  Power Locks            & Keyless Entry                  & Auxiliary Audio Connection     & Aluminum/Alloy Wheels\\
+  Power Mirrors          & Alarm                          & Satellite Radio                & \textbf{PAINT}\\
+  \textbf{DECOR}         & Message Center                 & \textbf{SAFETY}                & Clear Coat Paint\\
+  Dual Mirrors           & Steering Wheel Touch Controls  & Drivers Side Air Bag           & \textbf{OTHER}\\
+  Tinted Glass           & Telescopic Wheel               & Passenger Air Bag              & Traction Control\\
+  Console/Storage        & Climate Control                & Anti-Lock Brakes (4)           & Stability Control\\
+  Overhead Console       & Backup Camera                  & Front Side Impact Air Bags     & \\
+\end{tabular}
+
+\newpage
+% =====================================================================
+%  PAGE 2 — line items + totals
+%  \Group{line}{SECTION}
+%  \Item{line}{sym}{oper}{description}{part no}{qty}{ext price}{m/s}{labor}{cat}{paint}
+%  Use \ul{...} around a value to underline it (CCC marks edited values that way).
+% =====================================================================
+\vspace*{-7pt}
+\begin{lineitems}
+  \Group{1}{RADIATOR SUPPORT}
+  \Item{2}{*}{Repl}{Upper tie bar}{F25113SHMA}{1}{287.60}{s}{\ul{1.5}}{}{0.8}
+  \groupsep
+  \Group{3}{COOLING}
+  \Item{4}{**}{Repl}{A/M Radiator all}{214103SH0A}{1}{\ul{140.00}}{m}{1.6}{M}{}
+  \Item{5}{**}{Repl}{A/M Fan assy}{214819AP0A}{1}{\ul{125.00}}{m}{Incl.}{}{}
+  \groupsep
+  \Group{6}{AIR CONDITIONER \& HEATER}
+  \Item{7}{**}{Repl}{A/M Condenser assy 1.8 liter}{921003SH0C}{1}{111.65}{m}{0.6}{}{}
+  \Item{8}{}{}{AC Service evacuate \& recharge}{}{}{}{m}{1.4}{M}{}
+  \Item{9}{}{}{AC Service refrigerant recovery}{}{}{}{m}{0.4}{M}{}
+  \Item{10}{}{}{Deduct for Overlap}{}{}{}{}{-0.3}{M}{}
+  \Item{11}{\#}{Rpr}{Setup \& measure}{}{}{}{}{1.5}{F}{}
+  \Item{12}{\#}{Rpr}{Rough pull}{}{}{}{}{1.5}{F}{}
+  \groupsep
+  \Group{13}{ELECTRICAL}
+  \Item{14}{}{Repl}{Low note horn}{256204AF0A}{1}{124.05}{}{0.2}{}{}
+  \Subtotals{788.30}{8.4}{0.8}
+\end{lineitems}
+
+\begin{totals}
+  \TotalRow{Parts}{}{}{788.30}
+  \TotalRow{Body Labor}{2.3 hrs}{\$ 63.00 /hr}{144.90}
+  \TotalRow{Paint Labor}{0.8 hrs}{\$ 63.00 /hr}{50.40}
+  \TotalRow{Mechanical Labor}{3.1 hrs}{\$ 130.00 /hr}{403.00}
+  \TotalRow{Frame Labor}{3.0 hrs}{\$ 105.00 /hr}{315.00}
+  \TotalRow{Paint Supplies}{0.8 hrs}{\$ 48.00 /hr}{38.40}
+  \TotalLine{Subtotal}{1,740.00}
+  \TaxRow{Sales Tax}{\$ 1,740.00}{6.5000 \%}{113.10}
+  \GrandTotal{Grand Total}{1,853.10}
+\end{totals}
+
+\newpage
+% =====================================================================
+%  PAGE 3 — Florida statutory notices (fixed text)
+% =====================================================================
+\legal\raggedright\hyphenpenalty=10000\exhyphenpenalty=10000
+\vspace*{-17pt}
+ANY PERSON WHO KNOWINGLY AND WITH INTENT TO INJURE, DEFRAUD, OR DECEIVE ANY INSURER FILES A STATEMENT OF CLAIM OR AN APPLICATION CONTAINING ANY FALSE, INCOMPLETE, OR MISLEADING INFORMATION IS GUILTY OF A FELONY OF THE THIRD DEGREE(FLORIDA STATUTES TITLE XLVI, CHAPTER 817.234). FAILURE TO USE THE INSURANCE PROCEEDS IN ACCORDANCE WITH THE SECURITY AGREEMENT,IF ANY, COULD BE A VIOLATION OF S. 812.014, FLORIDA STATUTES. IF YOU HAVE ANY QUESTIONS, CONTACT YOUR LENDING INSTITUTION. IF A CHARGE FOR SHOP SUPPLIES OR HAZARDOUS OR OTHER WASTE REMOVAL IS INCLUDED ON THIS ESTIMATE, PLEASE NOTE THE FOLLOWING: \textquotedbl THIS CHARGE REPRESENTS COSTS AND PROFITS TO THE MOTOR VEHICLE REPAIR FACILITY FOR MISCELLANEOUS SHOP SUPPLIES OR WASTE DISPOSAL.\textquotedbl{} IF A CHARGE FOR NEW TIRES OR A NEW OR REMANUFACTURED LEAD-ACID BATTERY IS INCLUDED ON THIS ESTIMATE, PLEASE NOTE THE FOLLOWING: A \$1.00 FEE FOR EACH NEW MOTOR VEHICLE TIRE SOLD AT RETAIL IS IMPOSED ON ANY PERSON ENGAGING IN THE BUSINESS OF MAKING RETAIL SALES OF NEW MOTOR VEHICLE TIRES WITHIN THE STATE OF FLORIDA. FLORIDA STATUTES TITLE XXIX CHAPTER 403.718. A \$1.50 FEE FOR EACH NEW OR REMANUFACTURED LEAD-ACID BATTERY SOLD AT RETAIL IS IMPOSED ON ANY PERSON ENGAGING IN THE BUSINESS OF MAKING RETAIL SALES OF NEW OR REMANUFACTURED LEAD-ACID BATTERIES WITHIN THE STATE OF FLORIDA. FLORIDA STATUTES TITLE XXIX 403.7185.
+
+\vspace{13.3pt}
+THIS ESTIMATE HAS BEEN PREPARED BASED ON THE USE OF CRASH PARTS SUPPLIED BY A SOURCE OTHER THAN THE MANUFACTURER OF YOUR MOTOR VEHICLE. THE AFTERMARKET CRASH PARTS USED IN THE PREPARATION OF THIS ESTIMATE ARE WARRANTED BY THE MANUFACTURER OR DISTRIBUTOR OF SUCH PARTS RATHER THAN THE MANUFACTURER OF YOUR VEHICLE.
+
+\newpage
+% =====================================================================
+%  PAGE 4 — data-source note and symbol legend
+% =====================================================================
+\legal\raggedright\hyphenpenalty=10000\exhyphenpenalty=10000
+\vspace*{-23pt}
+Unless otherwise noted, labor times and part prices on this estimate are taken from published collision estimating guide data and from the supplier quotes listed on the Parts Supplier List, and the parts presented are OEM parts. OEM parts are manufactured by or for the vehicle's Original Equipment Manufacturer (OEM) according to OEM's specifications for U.S. distribution. OEM parts are available at OE/Vehicle dealerships or the specified supplier. OPT OEM (Optional OEM) or ALT OEM (Alternative OEM) parts are OEM parts that may be provided by or through alternate sources other than the OEM vehicle dealerships with discounted pricing. Asterisk (*) or Double Asterisk (**) indicates that the parts and/or labor data provided by third party sources of data may have been modified or may have come from an alternate data source. Tilde sign (\textasciitilde) items indicate Not-Included Labor operations. The symbol (<>) indicates the refinish operation WILL NOT be performed as a separate procedure from the other panels in the estimate. Non-Original Equipment Manufacturer aftermarket parts are described as Non OEM, A/M or NAGS. Used parts are described as LKQ, RCY, or USED. Reconditioned parts are described as Recond. Recored parts are described as Recore. NAGS Part Numbers and Benchmark Prices are provided by National Auto Glass Specifications. Pound sign (\#) items indicate manual entries. Parts numbers and prices should be confirmed with the local dealership.
+
+\vspace{13.3pt}
+The following is a list of additional abbreviations or symbols that may be used to describe work to be done or parts to be repaired or replaced:
+
+\vspace{13.3pt}
+SYMBOLS FOLLOWING PART PRICE:\\
+m=Mechanical component. s=Structural component. T=Miscellaneous Taxed charge category. X=Miscellaneous Non-Taxed charge category.
+
+\vspace{13.3pt}
+SYMBOLS FOLLOWING LABOR:\\
+D=Diagnostic labor category. E=Electrical labor category. F=Frame labor category. G=Glass labor category. M=Mechanical labor category. S=Structural labor category. (numbers) 1 through 4=User Defined Labor Categories.
+
+\vspace{13.3pt}
+OTHER SYMBOLS AND ABBREVIATIONS:\\
+Adj.=Adjacent. Algn.=Align. ALU=Aluminum. A/M=Aftermarket part. Blnd=Blend. BOR=Boron steel. CAPA=Certified Automotive Parts Association. CFC=Carbon Fiber. D\&R=Disconnect and Reconnect. HSS=High Strength Steel. HYD=Hydroformed Steel. Incl.=Included. LKQ=Like Kind and Quality. LT=Left. MAG=Magnesium. Non-Adj.=Non Adjacent. NSF=NSF International Certified Part. O/H=Overhaul. Qty=Quantity. Refn=Refinish. Repl=Replace. R\&I=Remove and Install. R\&R=Remove and Replace. Rpr=Repair. RT=Right. SAS=Sandwiched Steel. Sect=Section. STS=Stainless Steel. Subl=Sublet. UHS=Ultra High Strength Steel. N=Note(s) associated with the estimate line. BAR=Bureau of Automotive Repair. EPA=Environmental Protection Agency. NHTSA=National Highway Transportation and Safety Administration. PDR=Paintless Dent Repair. VIN=Vehicle Identification Number.
+
+\newpage
+% =====================================================================
+%  PAGE 5 — parts supplier list
+%  \Supplier{line}{supplier}{street}{city}{phone}{part #}{description}{quote}{expires}{price}
+% =====================================================================
+\body
+\vspace*{-12pt}
+\centerline{\sect PARTS SUPPLIER LIST}
+\vspace{17pt}
+\begin{suppliers}
+  \Supplier{4}{Performance Radiator}{470 27th St}{Orlando FL 32806}{(407) 245-8787}{\#2332}{A/M Radiator all}{Quote: SAMPLE-Q-1001}{Expires: 11/11/26}{\$ 140.00}
+  \Supplier{5}{Performance Radiator}{470 27th St}{Orlando FL 32806}{(407) 245-8787}{\#622960}{A/M Fan assy}{Quote: SAMPLE-Q-1002}{Expires: 11/11/26}{\$ 125.00}
+  \Supplier{7}{KSI Collision Parts}{3863 W D Judge Dr, Suite 110}{Orlando FL 32808}{(800) 574-7278}{\#NI3030173}{A/M Condenser assy 1.8 liter}{Quote: SAMPLE-Q-1003}{Expires: 11/05/26}{\$ 111.65}
+\end{suppliers}
+
+\end{document}
