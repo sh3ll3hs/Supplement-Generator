@@ -31,7 +31,7 @@ The PDF uses Tahoma when it's installed (it ships with Windows and macOS), which
    - `Supplement-Maker-Mac-Intel` is for older Intel Macs
 
    Each build is checked automatically: the packaged app renders a sample PDF (`selftest.pdf`, included in the artifact) before the zip is uploaded.
-4. Optional: push a tag like `v1.0.0` to also get a GitHub Release with all three zips attached.
+4. To publish a download page, go to **Releases → Draft a new release**, type a new tag such as `v1.0.0`, and click **Publish release**. The workflow builds all three apps and attaches the zips to that release within a few minutes.
 
 ### Or build on the computer itself
 

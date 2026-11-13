@@ -3,7 +3,8 @@ name: Build Windows and Mac apps
 on:
   push:
     branches: [main]
-    tags: ["v*"]
+  release:
+    types: [published]      # publishing a release on GitHub builds and attaches the apps
   workflow_dispatch:
 
 jobs:
@@ -55,7 +56,7 @@ jobs:
             selftest.pdf
 
   release:
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: github.event_name == 'release'
     needs: build
     runs-on: ubuntu-latest
     permissions:
@@ -66,4 +67,5 @@ jobs:
           path: artifacts
       - uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event.release.tag_name }}
           files: artifacts/**/*.zip
